@@ -8,3 +8,4 @@ numpy
 python-multipart
 pymysql
 python-dotenv
+google
