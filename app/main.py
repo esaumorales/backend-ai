@@ -1,54 +1,27 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-
+from fastapi import FastAPI
 from app.core.config import configure_cors
-from app.models.student_data import StudentData, PredictionResponse
-from app.services.predictor import predict_from_payload, ModelNotLoadedError
+from app.core.database import Base, engine
+from app.routers.auth_router import router as auth_router
+from app.routers.student_router import router as student_router
+from app.routers.tutor_router import router as tutor_router
+from app.routers.prediction_router import router as prediction_router
 
+# Crear tablas automáticamente
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="API Predicción de Rendimiento Académico",
-    description="Servicio REST sobre el modelo MLP entrenado para predecir rendimiento estudiantil.",
-    version="1.0.0",
+    title="AI Academic Performance API",
+    version="1.0.0"
 )
 
-# CORS para permitir llamadas desde tu frontend
 configure_cors(app)
 
-
-@app.get("/", tags=["Health"])
+@app.get("/")
 def root():
-    return {"message": "API de IA para predicción de rendimiento académico funcionando ✅"}
+    return {"message": "Backend funcionando correctamente"}
 
-
-@app.get("/health", tags=["Health"])
-def health():
-    return {"status": "ok"}
-
-
-@app.post("/predict", response_model=PredictionResponse, tags=["Predicción"])
-def predict(student: StudentData):
-    """
-    Endpoint principal.
-
-    Recibe las variables del estudiante y devuelve:
-    - predicted_class: Insuficiente / Satisfactorio / Excelente
-    - probabilities: dict con probabilidad por clase
-    """
-    # Compatibilidad Pydantic v1/v2
-    if hasattr(student, "model_dump"):
-        payload = student.model_dump()
-    else:
-        payload = student.dict()
-
-    try:
-        predicted_class, probabilities = predict_from_payload(payload)
-    except ModelNotLoadedError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al predecir: {e}")
-
-    return PredictionResponse(
-        predicted_class=predicted_class,
-        probabilities=probabilities,
-    )
+# Rutas
+app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(student_router, prefix="/students", tags=["Students"])
+app.include_router(tutor_router, prefix="/tutor", tags=["Tutor"])
+app.include_router(prediction_router, prefix="/predict", tags=["Prediction"])
