@@ -1,1 +1,60 @@
+# ===========================
+# ARCHIVOS SENSIBLES
+# ===========================
 .env
+*.env
+.env.*
+
+# ===========================
+# ENTORNOS VIRTUALES
+# ===========================
+venv/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# ===========================
+# CACHE PYTHON
+# ===========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+dist/
+build/
+pip-wheel-metadata/
+
+# ===========================
+# ARTIFACTOS / MODELOS
+# (evita subir tus joblib pesados)
+# ===========================
+app/artifacts/
+*.joblib
+*.pkl
+*.sav
+*.h5
+
+# ===========================
+# EDITORES
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===========================
+# BASES DE DATOS LOCALES
+# ===========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ===========================
+# LOGS
+# ===========================
+*.log
+logs/

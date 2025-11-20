@@ -19,7 +19,7 @@ Cortas	Activo	Concentrado	Suficientes	Ligero	Optima	Moderada	Bajo_Estres	Poco	Me
 Adecuadas	Sedentario	Concentrado	Escasos	Ligero	Delicada	Severa	Bajo_Estres	Poco	Media	Muy_Confiado	Constante	Adecuado	Basico	Controlada	Normal	Desfavorable	Satisfactorio
 Adecuadas	Activo	Disperso	Escasos	Moderado	Estable	Severa	Medio_Estres	Poco	Media	Muy_Confiado	Regular	Caotico	Basico	Controlada	Normal	Adecuado	Excelente
 Cortas	Activo	Disperso	Escasos	Ligero	Delicada	Leve	Bajo_Estres	Poco	Limitada	Confiado	Regular	Caotico	Basico	Controlada	Normal	Adecuado	Satisfactorio
-Adecuadas	Activo	Disperso	Suficientes	Ligero	Delicada	Severa	Bajo_Estres	Poco	Limitada	Confiado	Regular	Caotico	Basico	Controlada	Normal	Desfavorable	Satisfactorio
+Adecuadas	Activo	Disperso	Suficientes	Ligero	Delicada	Severa	Bajo_Estres	Poco	Limitadaw	Confiado	Regular	Caotico	Basico	Controlada	Normal	Desfavorable	Satisfactorio
 Intensas	Activo	Concentrado	Suficientes	Ligero	Delicada	Leve	Bajo_Estres	Poco	Media	Muy_Confiado	Constante	Adecuado	Intermedio	Controlada	Normal	Desfavorable	Excelente
 Adecuadas	Activo	Disperso	Suficientes	Ligero	Optima	Severa	Bajo_Estres	Poco	Limitada	Confiado	Regular	Caotico	Intermedio	Controlada	Normal	Desfavorable	Excelente
 Cortas	Frecuente	Concentrado	Escasos	Moderado	Delicada	Leve	Bajo_Estres	Poco	Limitada	Muy_Confiado	Constante	Caotico	Intermedio	Controlada	Prolongado	Adecuado	Excelente

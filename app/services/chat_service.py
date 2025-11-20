@@ -1,26 +1,15 @@
 import os
 import google.generativeai as genai
 
-# Configurar API Key desde env
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Cargar el modelo Gemini más estable
-model = genai.GenerativeModel("gemini-pro")
-
+# Modelo correcto para API legacy
+model = genai.GenerativeModel("models/gemini-2.5-flash")
 
 async def generate_chat_response(message: str) -> str:
-    """
-    Genera una respuesta usando Gemini (Google AI).
-    """
-
     prompt = f"""
 Eres un asistente académico experto que ayuda a estudiantes y tutores.
-Siempre brindas explicaciones claras, consejos útiles y sugerencias específicas
-sobre hábitos de estudio, rendimiento académico, estrés, motivación y aprendizaje.
-
-Usuario dice:
-{message}
-
+Usuario dice: {message}
 Responde de forma amable, clara y educativa.
 """
 

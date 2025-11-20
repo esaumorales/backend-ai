@@ -1,44 +1,37 @@
 import pandas as pd
 from sqlalchemy.orm import Session
-from sqlalchemy import select
-from app.core.database import SessionLocal
+from sqlalchemy import text
+from app.core.database import SessionLocal, engine, Base
 from app.models.student_model import Student
-from app.models.user_model import User
+from app.models.prediction_model import Prediction
 
 FILE_PATH = "app/data/Data_redes_bayesianas_riesgo.txt"
+DEFAULT_TUTOR_ID = 3
 
 
-def ensure_tutor_exists(db: Session):
-    """Crea el tutor principal si no existe."""
-    tutor = db.execute(
-        select(User).where(User.email == "tutor@gmail.com")
-    ).scalar_one_or_none()
+def reset_tables():
+    print("🧹 Desactivando restricciones de FOREIGN KEY...")
+    with engine.connect() as conn:
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 0;"))
+        conn.commit()
 
-    if tutor:
-        print(f"✔ Tutor ya existe con id={tutor.id}")
-        return tutor.id
+        print("🗑️ Eliminando tablas 'predictions' y 'students' si existen...")
+        conn.execute(text("DROP TABLE IF EXISTS predictions;"))
+        conn.execute(text("DROP TABLE IF EXISTS students;"))
+        conn.commit()
 
-    print("➕ Creando tutor principal...")
+        print("🔒 Reactivando FOREIGN KEY checks...")
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 1;"))
+        conn.commit()
 
-    new_tutor = User(
-        name="Tutor Principal",
-        email="tutor@gmail.com",
-        password_hash="123",
-        role="tutor"
-    )
-
-    db.add(new_tutor)
-    db.commit()
-    db.refresh(new_tutor)
-
-    print(f"✔ Tutor creado con id={new_tutor.id}")
-    return new_tutor.id
+    print("📌 Recreando tablas limpias...")
+    Base.metadata.create_all(bind=engine)
 
 
-def insert_student(db: Session, nombre: str, data: dict, tutor_id: int):
+def insert_student(db, nombre, data):
     student = Student(
         nombre=nombre,
-        tutor_id=tutor_id,
+        tutor_id=DEFAULT_TUTOR_ID,
 
         sleep_hours=data.get("sleep_hours", "Desconocido"),
         attendance_percentage=data.get("attendance_percentage", "Desconocido"),
@@ -60,14 +53,12 @@ def insert_student(db: Session, nombre: str, data: dict, tutor_id: int):
 
 def load_students():
     print("📥 Leyendo dataset...")
-
     df = pd.read_csv(FILE_PATH, sep="\t")
     db: Session = SessionLocal()
 
     try:
-        print("📌 Verificando tutor...")
-
-        tutor_id = ensure_tutor_exists(db)
+        # 🔥 Resetear tablas
+        reset_tables()
 
         print("📌 Insertando los 4 CASOS ESPECIALES...")
 
@@ -116,19 +107,19 @@ def load_students():
         ]
 
         for caso in casos:
-            insert_student(db, caso["nombre"], caso, tutor_id)
+            insert_student(db, caso["nombre"], caso)
 
-        print("📌 Insertando estudiantes del dataset...")
+        print("📌 Insertando estudiantes desde el dataset...")
 
         base_index = 5
         for idx, row in df.iterrows():
             data = row.to_dict()
-            insert_student(db, f"Estudiante {base_index + idx}", data, tutor_id)
+            insert_student(db, f"Estudiante {base_index + idx}", data)
 
-        print("🎉 Datos cargados correctamente ✔")
+        print("🎉 TODOS LOS ESTUDIANTES HAN SIDO CARGADOS CORRECTAMENTE ✔")
 
     except Exception as e:
-        print("❌ Error insertando estudiantes:", e)
+        print("❌ Error cargando los estudiantes:", e)
         db.rollback()
 
     finally:

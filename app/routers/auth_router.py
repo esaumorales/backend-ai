@@ -41,4 +41,16 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(400, "Credenciales incorrectas")
 
     token = create_access_token({"id": user.id, "role": user.role})
-    return {"access_token": token, "token_type": "bearer"}
+
+    # 🔥 Devolver token Y los datos del usuario
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role
+        }
+    }
+
