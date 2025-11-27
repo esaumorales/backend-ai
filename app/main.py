@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from app.core.config import configure_cors
 from app.core.database import Base, engine
 
+from fastapi import Response
+
 # Routers
 from app.routers.auth_router import router as auth_router
 from app.routers.student_router import router as student_router
@@ -20,6 +22,11 @@ app = FastAPI(
 )
 
 configure_cors(app)
+
+
+@app.options("/{rest_of_path:path}")
+async def preflight_handler(rest_of_path: str):
+    return Response(status_code=200)
 
 
 @app.get("/")
