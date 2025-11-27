@@ -9,3 +9,5 @@ python-multipart
 pymysql
 python-dotenv
 google
+SQLAlchemy==2.0.28
+python-dotenv
