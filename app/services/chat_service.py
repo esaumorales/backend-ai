@@ -80,27 +80,37 @@ Rendimiento académico observado: {student.academic_performance}
     )
 
     # ============================
-    #   PROMPT FINAL
+    #   PROMPT FINAL (VERSIÓN CORTA)
+    # ============================
+    # ============================
+    #   PROMPT FINAL (ESTILO NATURAL)
     # ============================
     prompt = f"""
 {role_text}
 
-Contexto del alumno (si aplica):
+Contexto del alumno:
 {student_context}
 
-Contexto de predicción:
+Predicción:
 {prediction_context}
 
-Instrucciones:
-- Usa SIEMPRE el contexto anterior para dar recomendaciones concretas.
-- Explica qué está bien, qué está en riesgo y qué puede mejorar.
-- Habla con tono amable, claro y educativo.
+Instrucciones IMPORTANTES para tu respuesta:
+- Responde de forma corta, clara y amable.
+- NO uses markdown, títulos, ni símbolos como #, *, -, etc.
+- Organiza la respuesta SOLO en 3 párrafos naturales:
+  
+  1) Primer párrafo: explica lo positivo del alumno, máximo 2 frases.
+  
+  2) Segundo párrafo: explica lo que está en riesgo, máximo 3 frases.
+  
+  3) Tercer párrafo: da 2 o 3 acciones concretas para mejorar. Escríbelas como texto normal, sin viñetas ni símbolos.
+
+- No repitas demasiados datos. Resume lo esencial.
+- Mantente profesional y académico, sin lenguaje clínico.
 - No inventes datos que no están en el contexto.
-- NO des consejos médicos o psicológicos profesionales.
-- Mantén el enfoque 100% académico.
 
 Mensaje del usuario:
-\"\"\"{message}\"\"\" 
+\"\"\"{message}\"\"\"
 """
 
     # ============================
