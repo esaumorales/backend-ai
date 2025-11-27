@@ -53,8 +53,26 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     if new_user.role == "student":
         student = Student(
             nombre=new_user.name,
-            user_id=new_user.id,  # 👈 YA EXISTE ESTE CAMPO EN TU MODELO
+            user_id=new_user.id,
+            study_hours_per_day=0,
+            social_media_hours=0,
+            netflix_hours=0,
+            attendance_percentage=0,
+            sleep_hours=0,
+            exercise_frequency=0,
+            mental_health_rating=0,
+            academic_motivation=0,
+            time_management=0,
+            procrastination_level=0,
+            focus_level=0,
+            test_anxiety_level=0,
+            academic_self_efficacy=0,
+            study_techniques_usage=0,
+            home_study_environment=0,
+            study_resources_availability=0,
+            financial_stress_level=0,
         )
+
         db.add(student)
         db.commit()
 
