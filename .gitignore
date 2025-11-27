@@ -33,11 +33,11 @@ pip-wheel-metadata/
 # ARTIFACTOS / MODELOS
 # (evita subir tus joblib pesados)
 # ===========================
-app/artifacts/
-*.joblib
-*.pkl
-*.sav
-*.h5
+# app/artifacts/
+# *.joblib
+# *.pkl
+# *.sav
+# *.h5
 
 # ===========================
 # EDITORES
