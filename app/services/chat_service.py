@@ -82,9 +82,6 @@ Rendimiento académico observado: {student.academic_performance}
     # ============================
     #   PROMPT FINAL (VERSIÓN CORTA)
     # ============================
-    # ============================
-    #   PROMPT FINAL (ESTILO NATURAL)
-    # ============================
     prompt = f"""
 {role_text}
 

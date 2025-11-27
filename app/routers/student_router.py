@@ -107,7 +107,6 @@ def choose_tutor(
 
 # ============================================================
 # 🔹 LISTA DE ESTUDIANTES PAGINADA
-# ============================================================
 @router.get("/")
 def get_students(db: Session = Depends(get_db), page: int = 1, limit: int = 10):
 
@@ -119,10 +118,29 @@ def get_students(db: Session = Depends(get_db), page: int = 1, limit: int = 10):
     response = []
     for s in students:
         last = s.predictions[-1] if s.predictions else None
+
         response.append(
             {
                 "id": s.id,
                 "nombre": s.nombre,
+                # 🔥 17 variables reales
+                "sleep_hours": s.sleep_hours,
+                "study_hours_per_day": s.study_hours_per_day,
+                "social_media_hours": s.social_media_hours,
+                "netflix_hours": s.netflix_hours,
+                "attendance_percentage": s.attendance_percentage,
+                "exercise_frequency": s.exercise_frequency,
+                "mental_health_rating": s.mental_health_rating,
+                "academic_motivation": s.academic_motivation,
+                "focus_level": s.focus_level,
+                "time_management": s.time_management,
+                "test_anxiety_level": s.test_anxiety_level,
+                "academic_self_efficacy": s.academic_self_efficacy,
+                "study_techniques_usage": s.study_techniques_usage,
+                "home_study_environment": s.home_study_environment,
+                "study_resources_availability": s.study_resources_availability,
+                "financial_stress_level": s.financial_stress_level,
+                # Rendimiento IA
                 "academic_performance": last.predicted_label if last else "Sin datos",
                 "score": round(last.predicted_score * 100, 2) if last else None,
             }
@@ -155,5 +173,23 @@ def get_student(student_id: int, db: Session = Depends(get_db)):
         "nombre": student.nombre,
         "academic_performance": last.predicted_label if last else "Sin datos",
         "score": round(last.predicted_score * 100, 2) if last else None,
+        # 🔥 AGREGO LAS 17 VARIABLES AQUÍ MISMO
+        "sleep_hours": student.sleep_hours,
+        "study_hours_per_day": student.study_hours_per_day,
+        "social_media_hours": student.social_media_hours,
+        "netflix_hours": student.netflix_hours,
+        "attendance_percentage": student.attendance_percentage,
+        "exercise_frequency": student.exercise_frequency,
+        "test_anxiety_level": student.test_anxiety_level,
+        "academic_motivation": student.academic_motivation,
+        "mental_health_rating": student.mental_health_rating,
+        "focus_level": student.focus_level,
+        "time_management": student.time_management,
+        "academic_self_efficacy": student.academic_self_efficacy,
+        "study_techniques_usage": student.study_techniques_usage,
+        "home_study_environment": student.home_study_environment,
+        "study_resources_availability": student.study_resources_availability,
+        "financial_stress_level": student.financial_stress_level,
+        # 🔥 IMPORTANTE: dejamos tu RAW tal cual
         "raw": student.to_payload(),
     }
