@@ -3,7 +3,7 @@ from app.core.database import SessionLocal
 from app.models.user_model import User
 from app.services.hashing import hash_password
 
-EMAIL = "esaur@gmail.com"
+EMAIL = "tutor@gmail.com"
 NEW_PASSWORD = "123"
 
 def reset_password():

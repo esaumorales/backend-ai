@@ -1,3 +1,5 @@
+# app/schemas/prediction_schema.py
+
 from pydantic import BaseModel
 from typing import Dict
 

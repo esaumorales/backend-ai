@@ -6,57 +6,34 @@ from app.models.student_model import Student
 from app.models.prediction_model import Prediction
 from app.services.predictor import predict_from_payload
 
-from app.models import user_model, student_model, prediction_model  # IMPORTANTE
-
 
 def generate_predictions():
-    print("🔍 Generando predicciones para todos los estudiantes...")
+    print("🔍 Generando predicciones...")
 
-    db: Session = SessionLocal()
+    db = SessionLocal()
+    students = db.query(Student).all()
 
-    try:
-        students = db.query(Student).all()
-        total = len(students)
+    for st in students:
+        try:
+            payload = st.to_payload()
+            predicted_class, raw_score, proba = predict_from_payload(payload)
 
-        if total == 0:
-            print("⚠ No hay estudiantes en la base de datos.")
-            return
+            if isinstance(raw_score, dict):
+                raw_score = max(raw_score.values())
 
-        print(f"📌 Total estudiantes encontrados: {total}")
+            pred = Prediction(
+                student_id=st.id,
+                predicted_label=predicted_class,
+                predicted_score=float(raw_score),
+            )
 
-        for i, student in enumerate(students, start=1):
+            db.add(pred)
 
-            try:
-                payload = student.to_payload()
+        except Exception as e:
+            print(f"❌ Error con estudiante {st.id}: {e}")
 
-                # Ejecutar modelo
-                predicted_class, probabilities, _ = predict_from_payload(payload)
-
-                score = float(probabilities[predicted_class])
-
-                pred = Prediction(
-                    student_id=student.id,
-                    predicted_label=predicted_class,
-                    predicted_score=score
-                )
-                db.add(pred)
-
-                if i % 50 == 0:
-                    print(f"   → {i}/{total} predicciones generadas...")
-
-            except Exception as e:
-                print(f"❌ Error con estudiante ID={student.id}: {e}")
-                continue
-
-        db.commit()
-        print("🎉 PREDICCIONES GENERADAS EXITOSAMENTE ✔")
-
-    except Exception as e:
-        print("❌ Error general:", e)
-        db.rollback()
-
-    finally:
-        db.close()
+    db.commit()
+    print("✔ Predicciones generadas")
 
 
 if __name__ == "__main__":
