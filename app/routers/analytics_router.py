@@ -83,19 +83,30 @@ MAPS = {
 # Convertir estudiante → vector EXACTO del entrenamiento
 # ============================================================
 def student_to_vector(student: Student):
-    payload = student.to_payload()
     row = []
 
     for f in FIELDS:
-        v = payload.get(f)
+        raw_value = getattr(student, f)
 
-        if isinstance(v, (float, int)):
-            row.append(float(v))
-            continue
-
-        if f in MAPS:
-            row.append(float(MAPS[f].get(v, 2)))
+        # Convertimos TODO a string primero para evitar la conversión interna a float
+        if raw_value is None:
+            value = ""
         else:
+            value = str(raw_value).strip()
+
+        # Si es número real → convertir a float directo
+        try:
+            num = float(value)
+            row.append(num)
+            continue
+        except:
+            pass  # No es número, seguimos abajo
+
+        # Si es string mapeable
+        if f in MAPS and value in MAPS[f]:
+            row.append(float(MAPS[f][value]))
+        else:
+            print(f"⚠ Valor desconocido para {f}: '{value}', usando 2.0 por defecto")
             row.append(2.0)
 
     return np.array(row, dtype=float)

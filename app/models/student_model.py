@@ -1,6 +1,6 @@
 # app/models/student_model.py
 
-from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Text, Float, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -23,28 +23,28 @@ class Student(Base):
     # ============================================================
     # 🔹 VARIABLES NUMÉRICAS (17 FEATURES DEL CLUSTERING)
     # ============================================================
-    study_hours_per_day = Column(Float)
-    social_media_hours = Column(Float)
-    netflix_hours = Column(Float)
+    study_hours_per_day = Column(Text)
+    social_media_hours = Column(Text)
+    netflix_hours = Column(Text)
 
-    attendance_percentage = Column(Float)
-    sleep_hours = Column(Float)
-    exercise_frequency = Column(Float)
+    attendance_percentage = Column(Text)
+    sleep_hours = Column(Text)
+    exercise_frequency = Column(Text)
 
-    mental_health_rating = Column(Float)
-    academic_motivation = Column(Float)
-    time_management = Column(Float)
+    mental_health_rating = Column(Text)
+    academic_motivation = Column(Text)
+    time_management = Column(Text)
 
-    procrastination_level = Column(Float)
-    focus_level = Column(Float)
-    test_anxiety_level = Column(Float)
+    procrastination_level = Column(Text)
+    focus_level = Column(Text)
+    test_anxiety_level = Column(Text)
 
-    academic_self_efficacy = Column(Float)
-    study_techniques_usage = Column(Float)
-    home_study_environment = Column(Float)
+    academic_self_efficacy = Column(Text)
+    study_techniques_usage = Column(Text)
+    home_study_environment = Column(Text)
 
-    study_resources_availability = Column(Float)
-    financial_stress_level = Column(Float)
+    study_resources_availability = Column(Text)
+    financial_stress_level = Column(Text)
 
     # No forma parte del clustering (puedes usarla para notas finales, etc.)
     academic_performance = Column(Float, nullable=True)
@@ -63,25 +63,33 @@ class Student(Base):
     # ============================================================
     # 🔹 PAYLOAD PARA IA (KMEANS / MLP) → SOLO NÚMEROS
     # ============================================================
+
     def to_payload(self) -> dict:
+
+        def safe_float(value):
+            try:
+                return float(value)
+            except:
+                return 0.0
+
         return {
-            "study_hours_per_day": float(self.study_hours_per_day or 0),
-            "social_media_hours": float(self.social_media_hours or 0),
-            "netflix_hours": float(self.netflix_hours or 0),
-            "attendance_percentage": float(self.attendance_percentage or 0),
-            "sleep_hours": float(self.sleep_hours or 0),
-            "exercise_frequency": float(self.exercise_frequency or 0),
-            "mental_health_rating": float(self.mental_health_rating or 0),
-            "academic_motivation": float(self.academic_motivation or 0),
-            "time_management": float(self.time_management or 0),
-            "procrastination_level": float(self.procrastination_level or 0),
-            "focus_level": float(self.focus_level or 0),
-            "test_anxiety_level": float(self.test_anxiety_level or 0),
-            "academic_self_efficacy": float(self.academic_self_efficacy or 0),
-            "study_techniques_usage": float(self.study_techniques_usage or 0),
-            "home_study_environment": float(self.home_study_environment or 0),
-            "study_resources_availability": float(
-                self.study_resources_availability or 0
+            "study_hours_per_day": safe_float(self.study_hours_per_day),
+            "social_media_hours": safe_float(self.social_media_hours),
+            "netflix_hours": safe_float(self.netflix_hours),
+            "attendance_percentage": safe_float(self.attendance_percentage),
+            "sleep_hours": safe_float(self.sleep_hours),
+            "exercise_frequency": safe_float(self.exercise_frequency),
+            "mental_health_rating": safe_float(self.mental_health_rating),
+            "academic_motivation": safe_float(self.academic_motivation),
+            "time_management": safe_float(self.time_management),
+            "procrastination_level": safe_float(self.procrastination_level),
+            "focus_level": safe_float(self.focus_level),
+            "test_anxiety_level": safe_float(self.test_anxiety_level),
+            "academic_self_efficacy": safe_float(self.academic_self_efficacy),
+            "study_techniques_usage": safe_float(self.study_techniques_usage),
+            "home_study_environment": safe_float(self.home_study_environment),
+            "study_resources_availability": safe_float(
+                self.study_resources_availability
             ),
-            "financial_stress_level": float(self.financial_stress_level or 0),
+            "financial_stress_level": safe_float(self.financial_stress_level),
         }
